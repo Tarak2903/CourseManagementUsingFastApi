@@ -11,7 +11,6 @@ class UserRepository:
             self.db.query(User)
             .filter(User.user_name == user_name)
             .first()
-            is not None
         )
 
     def add_user(self, user):
