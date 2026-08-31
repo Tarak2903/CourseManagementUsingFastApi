@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta, timezone
 import jwt
-from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
 from app.exceptions.UnAuthorizedException import UnAuthorizedException
 from app.exceptions.user_exceptions import UserAlreadyExistsException, UserDoesntExistsException
 from app.repositories.UserRepository import UserRepository
-from app.schemas.UserLogin import UserLogin
 from app.core.config import settings
+
+
 class UserService:
     def __init__(self,user_repo:UserRepository):
         self.user_repo=user_repo
         self.password_hash=PasswordHash.recommended()
-        self.oauth2_scheme=OAuth2PasswordBearer(tokenUrl="token")
 
     @staticmethod
     def create_token(payload:dict):
