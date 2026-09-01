@@ -4,7 +4,7 @@ import jwt
 from pwdlib import PasswordHash
 
 from app.core.config import settings
-from app.exceptions.UnAuthorizedException import UnAuthorizedException
+from app.exceptions.UnauthenticatedException import UnAuthorizedException
 from app.exceptions.user_exceptions import UserAlreadyExistsException, UserDoesntExistsException
 from app.schemas.Auth.SignupRequest import SignupRequest
 

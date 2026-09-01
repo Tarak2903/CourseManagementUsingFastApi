@@ -5,18 +5,35 @@ import jwt
 
 from app.core.config import settings
 from app.core.dependency import  get_auth_repository
-from app.exceptions.UnAuthorizedException import UnAuthorizedException
+from app.core.enums import Role
+from app.exceptions.UnauthenticatedException import UnauthenticatedException
+from app.exceptions.UnauthorizedException import UnauthorizedException
 from app.repositories.AuthRepository import AuthRepository
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl='/auth/login')
 
-async def get_current_user(token:str=Depends(oauth2_scheme),auth_repo:AuthRepository=Depends(get_auth_repository)):
+async def get_current_intern(token:str=Depends(oauth2_scheme),auth_repo:AuthRepository=Depends(get_auth_repository)):
     try:
         payload=jwt.decode(token,settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
         username=payload.get('user_name')
         if username is None:
-            raise UnAuthorizedException
+            raise UnauthenticatedException
         user =auth_repo.find_user_by_username(username)
         return user
 
     except InvalidTokenError:
-        raise UnAuthorizedException("Could not validate the credentials")
+        raise UnauthenticatedException("Could not validate the credentials")
+
+
+
+async def get_current_mentor(token:str=Depends(oauth2_scheme),auth_repo:AuthRepository=Depends(get_auth_repository)):
+    try:
+        payload=jwt.decode(token,settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
+        username=payload.get('user_name')
+        if username is None:
+            raise UnauthenticatedException
+        user=auth_repo.find_user_by_username(username)
+        if user.role != Role.MENTOR:
+            raise UnauthorizedException("User doesnt have the permission to perform the following actions")
+        return user
+    except:
+        raise UnauthenticatedException("Could not validate the credentials")

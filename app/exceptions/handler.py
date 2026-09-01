@@ -1,9 +1,10 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
+from app.exceptions.UnauthenticatedException import UnauthenticatedException
 from app.exceptions.ResourceNotFoundException import ResourceNotFoundException
 from app.exceptions.ResrouceAlreadyExistsException import ResourceAlreadyExistsException
-from app.exceptions.UnAuthorizedException import UnAuthorizedException
+from app.exceptions.UnauthenticatedException import UnAuthorizedException
 
 
 async def resource_already_exists_exception(request:Request,exc:ResourceAlreadyExistsException):
@@ -21,7 +22,7 @@ async def resource_doesnt_exists_exception(request:Request,exc:ResourceNotFoundE
         }
     )
 
-async def unauthorized_exception(request:Request,exc:UnAuthorizedException):
+async def unauthorized_exception(request:Request,exc:UnauthenticatedException):
     return JSONResponse(
         status_code=401,
         content={
