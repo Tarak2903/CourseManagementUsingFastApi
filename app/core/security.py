@@ -4,18 +4,18 @@ from jwt.exceptions import InvalidTokenError
 import jwt
 
 from app.core.config import settings
-from app.core.dependency import get_user_repository
+from app.core.dependency import  get_auth_repository
 from app.exceptions.UnAuthorizedException import UnAuthorizedException
-from app.repositories.UserRepository import UserRepository
-oauth2_scheme=OAuth2PasswordBearer(tokenUrl='/users/login')
+from app.repositories.AuthRepository import AuthRepository
+oauth2_scheme=OAuth2PasswordBearer(tokenUrl='/auth/login')
 
-async def get_current_user(token:str=Depends(oauth2_scheme),user_repo:UserRepository=Depends(get_user_repository)):
+async def get_current_user(token:str=Depends(oauth2_scheme),auth_repo:AuthRepository=Depends(get_auth_repository)):
     try:
         payload=jwt.decode(token,settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
         username=payload.get('user_name')
         if username is None:
             raise UnAuthorizedException
-        user =user_repo.check_user_name_exists(username)
+        user =auth_repo.find_user_by_username(username)
         return user
 
     except InvalidTokenError:

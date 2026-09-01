@@ -9,11 +9,13 @@ from app.exceptions.handler import resource_already_exists_exception, resource_d
 Base.metadata.create_all(bind=engine)
 from app.api.v1.endpoints.user import router as user_router
 from app.api.v1.endpoints.mentor import router as mentor_router
-app=FastAPI()
+from app.api.v1.endpoints.auth import router as auth_router
 
+
+app=FastAPI()
 app.include_router(user_router)
 app.include_router(mentor_router)
-
+app.include_router(auth_router)
 
 app.add_exception_handler(
     ResourceAlreadyExistsException,
