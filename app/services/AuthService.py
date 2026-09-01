@@ -4,7 +4,7 @@ import jwt
 from pwdlib import PasswordHash
 
 from app.core.config import settings
-from app.exceptions.UnauthenticatedException import UnAuthorizedException
+from app.exceptions.UnauthenticatedException import UnauthenticatedException
 from app.exceptions.user_exceptions import UserAlreadyExistsException, UserDoesntExistsException
 from app.schemas.Auth.SignupRequest import SignupRequest
 
@@ -32,7 +32,7 @@ class AuthService:
         if user_info is None:
             raise UserDoesntExistsException("User doesnt exists")
         if not self.password_hash.verify(user.password, user_info.password):
-            raise UnAuthorizedException("User not authorized")
+            raise UnauthenticatedException("User not authorized")
         return self.create_token(
             {"user_name": user.username,
              "exp": datetime.now(timezone.utc) + timedelta(minutes=15)})

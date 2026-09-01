@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from app.core.database import Base,engine
 from app.exceptions.ResourceNotFoundException import ResourceNotFoundException
 from app.exceptions.ResrouceAlreadyExistsException import ResourceAlreadyExistsException
-from app.exceptions.UnauthenticatedException import UnAuthorizedException
+from app.exceptions.UnauthenticatedException import  UnauthenticatedException
+from app.exceptions.ForbiddenException import ForbiddenException
 from app.exceptions.handler import resource_already_exists_exception, resource_doesnt_exists_exception, \
-    unauthorized_exception
+    unauthenticated_exception, forbidden_exception
 
 Base.metadata.create_all(bind=engine)
 from app.api.v1.endpoints.intern import router as user_router
@@ -26,6 +27,10 @@ app.add_exception_handler(
     resource_doesnt_exists_exception
 )
 app.add_exception_handler(
-    UnAuthorizedException,
-    unauthorized_exception
+    UnauthenticatedException,
+    unauthenticated_exception
+)
+app.add_exception_handler(
+    ForbiddenException,
+    forbidden_exception
 )
