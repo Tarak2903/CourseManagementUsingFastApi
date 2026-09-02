@@ -2,7 +2,6 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 import jwt
-
 from app.core.config import settings
 from app.core.dependency import  get_auth_repository
 from app.core.enums import Role
@@ -10,6 +9,7 @@ from app.exceptions.UnauthenticatedException import UnauthenticatedException
 from app.exceptions.ForbiddenException import ForbiddenException
 from app.repositories.AuthRepository import AuthRepository
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl='/auth/login')
+
 
 async def get_current_intern(token:str=Depends(oauth2_scheme),auth_repo:AuthRepository=Depends(get_auth_repository)):
     try:

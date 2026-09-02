@@ -2,10 +2,12 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.repositories.CourseRepository import CourseRepository
+from app.repositories.EnrollmentRepository import EnrollmentRepository
 from app.repositories.MentorRepository import MentorRepository
 from app.repositories.AuthRepository import AuthRepository
 from app.repositories.InternRepository import InternRepository
 from app.core.database import get_db
+from app.services.EnrollmentService import EnrollmentService
 from app.services.CourseService import CourseService
 from app.services.MentorService import MentorService
 from app.services.AuthService import AuthService
@@ -35,3 +37,11 @@ def get_course_repository(db:Session=Depends(get_db)):
 
 def get_course_service(course_repo:CourseRepository=Depends(get_course_repository)):
     return CourseService(course_repo)
+
+def get_enrollment_repository(db:Session=Depends(get_db)):
+    return EnrollmentRepository(db)
+
+def get_enrollment_service(enrollment_repo:EnrollmentRepository=Depends(get_enrollment_repository),
+                           intern_repo:InternRepository=Depends(get_intern_repository),
+                           course_repo:CourseRepository=Depends(get_course_repository)):
+    return EnrollmentService(enrollment_repo,intern_repo,course_repo)

@@ -16,7 +16,5 @@ def login_user(form_data:OAuth2PasswordRequestForm=Depends(),
     token=auth_service.login_user(form_data)
     return Token(access_token=token,token_type='bearer')
 
-@router.post('/signup',tags=["Authentication"])
-def create_user(user:SignupRequest,auth_service:AuthService=Depends(get_auth_service)):
-    auth_service.add_user(user)
+
 

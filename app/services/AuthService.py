@@ -20,12 +20,7 @@ class AuthService:
         print(token)
         return token
 
-    def add_user(self,user:SignupRequest):
-        hashed_password=self.password_hash.hash(user.password)
-        user.password=hashed_password
-        if self.auth_repo.find_user_by_username(user.user_name) is not None:
-            raise UserAlreadyExistsException("User already exists")
-        self.auth_repo.add_user(user)
+
 
     def login_user(self, user):
         user_info = self.auth_repo.find_user_by_username(user.username)

@@ -12,10 +12,3 @@ class AuthRepository:
             self.db.query(User).filter(User.user_name==user_name).first()
         )
 
-    def add_user(self,user:SignupRequest):
-        user_model=User(**user.model_dump())
-        self.db.add(user_model)
-        self.db.commit()
-        self.db.refresh(user_model)
-
-        return user_model
