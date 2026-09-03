@@ -29,3 +29,8 @@ class InternService:
         [interns.append(InternResponse(intern_name=intern.name,intern_user_name=intern.user_name)) for intern in ls]
         return interns
 
+    def change_intern_password(self,intern_id,password_req):
+        hashed_password=self.password_hash.hash(password_req.password)
+        self.intern_repo.change_intern_password(intern_id,hashed_password)
+
+

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from app.core.dependency import get_enrollment_service
 from app.core.security import get_current_mentor, get_current_intern
 from app.models.user import User
+from app.schemas.Course.CourseSectionCompletionStatus import CourseSectionCompletionStatus
 from app.schemas.Enrollment.EnrollmentRequest import EnrollmentRequest
 from app.services.EnrollmentService import EnrollmentService
 
@@ -29,3 +30,9 @@ def get_interns_course(enrollment_service:EnrollmentService=Depends(get_enrollme
 def get_interns_course_info(course_id,enrollment_service:EnrollmentService=Depends(get_enrollment_service),
                             intern:User=Depends(get_current_intern)):
     return enrollment_service.get_intern_course_info(course_id,intern.id)
+
+@router.put("/enrollment/courses/{course_id}",tags=['Intern'])
+def complete_course_section(course_id,course:CourseSectionCompletionStatus,
+                            enrollment_service:EnrollmentService=Depends(get_enrollment_service),intern:User=Depends(get_current_intern)):
+    return enrollment_service.complete_section(course_id,course,intern.id)
+

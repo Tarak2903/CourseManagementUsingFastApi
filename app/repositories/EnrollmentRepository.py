@@ -39,3 +39,12 @@ class EnrollmentRepository:
             filter(Enrollment.intern_id==intern_id,Enrollment.course_id==course_id,
             Enrollment.course_id==Course.id).first()
         )
+
+    def section_request_validation(self,course_id,intern_id):
+        return (self.db.query(Enrollment.section_completed,Course.total_section).
+         filter(Enrollment.intern_id==intern_id,Enrollment.course_id==course_id,Enrollment.course_id==Course.id)).first()
+
+    def complete_section(self,course_id,intern_id,section):
+        enrollment=self.db.query(Enrollment).filter(Enrollment.course_id==course_id,Enrollment.intern_id==intern_id).first()
+        enrollment.section_completed+=section
+        self.db.commit()

@@ -1,6 +1,7 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
+from app.exceptions.InvalidOperationException import InvalidOperationException
 from app.exceptions.UnauthenticatedException import UnauthenticatedException
 from app.exceptions.ResourceNotFoundException import ResourceNotFoundException
 from app.exceptions.ResrouceAlreadyExistsException import ResourceAlreadyExistsException
@@ -33,6 +34,13 @@ async def unauthenticated_exception(request:Request,exc:UnauthenticatedException
 async def forbidden_exception(request:Request,exc:ForbiddenException):
     return JSONResponse(
         status_code=403,
+        content={
+            "detail":exc.message
+        }
+    )
+async def invalid_operation_exception(request:Request,exc:InvalidOperationException):
+    return JSONResponse(
+        status_code=400,
         content={
             "detail":exc.message
         }

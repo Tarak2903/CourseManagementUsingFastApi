@@ -1,4 +1,5 @@
 from app.exceptions.ForbiddenException import ForbiddenException
+from app.exceptions.InvalidOperationException import InvalidOperationException
 from app.exceptions.course_exceptions import CourseNotFoundException
 from app.models.course import Course
 from app.models.enrollment import Enrollment
@@ -27,8 +28,6 @@ class EnrollmentService:
 
         if course is None:
             raise CourseNotFoundException("Course with this code deos not  exist")
-
-
         return self.enrollment_repo.enroll_intern(ls_interns,course.id)
 
     def get_intern_progress(self,intern_id):
@@ -52,5 +51,10 @@ class EnrollmentService:
         enrollment,course= self.enrollment_repo.get_intern_course_info(course_id,intern_id)
         return InternProgressResponse(course_name=course.name,total_sections=course.total_section,
                                       sections_completed=enrollment.section_completed,
-                                      percentage_completed=enrollment.section_completed/course.total_section)
+                                      percentage_completed=enrollment.section_completed/course.total_section*100)
 
+    def complete_section(self,course_id,course,intern_id):
+        section_completed,total_sections=self.enrollment_repo.section_request_validation(course_id,intern_id)
+        if section_completed+course.section>total_sections:
+            raise InvalidOperationException("Sections exceeded than the total sections")
+        self.enrollment_repo.complete_section(course_id,intern_id,course.section)

@@ -31,3 +31,9 @@ class InternRepository:
 
     def get_interns_by_mentor_id(self,mentor_id):
         return self.db.query(User).filter(User.mentor_id==mentor_id).all()
+
+    def change_intern_password(self,intern_id,password):
+        intern=self.db.query(User).filter(User.id==intern_id).first()
+        intern.password=password
+        self.db.commit()
+        return
