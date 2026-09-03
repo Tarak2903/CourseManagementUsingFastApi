@@ -7,5 +7,5 @@ class Course(Base):
 
     id=Column(Integer,primary_key=True,index=True)
     name=Column(String,nullable=False)
-    total_section=Column(String,nullable=False)
+    total_section=Column(Integer,nullable=False)
     course_code=Column(Integer,unique=True)

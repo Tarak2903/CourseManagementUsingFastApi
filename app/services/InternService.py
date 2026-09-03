@@ -3,6 +3,7 @@ from pwdlib import PasswordHash
 from app.exceptions.user_exceptions import UserAlreadyExistsException
 from app.repositories.InternRepository import InternRepository
 from app.schemas.Intern.InternCreationRequest import InternCreationRequest
+from app.schemas.Intern.InternResponse import InternResponse
 
 
 class InternService:
@@ -21,3 +22,10 @@ class InternService:
         if self.intern_repo.find_intern_by_username(intern.user_name) is not None:
             raise UserAlreadyExistsException("User already exists")
         return self.intern_repo.add_intern(intern,mentor_id)
+
+    def get_interns_by_mentor_id(self,mentor_id):
+        ls= self.intern_repo.get_interns_by_mentor_id(mentor_id)
+        interns=[]
+        [interns.append(InternResponse(intern_name=intern.name,intern_user_name=intern.user_name)) for intern in ls]
+        return interns
+

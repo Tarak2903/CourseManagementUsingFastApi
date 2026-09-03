@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.models.course import Course
 from app.models.enrollment import Enrollment
 
 
@@ -18,3 +19,23 @@ class EnrollmentRepository:
         self.db.add_all(ls_enrollment)
         self.db.commit()
 
+
+    def get_intern_progress(self,intern_id):
+        return (
+            self.db.query(Enrollment, Course)
+            .join(Course, Enrollment.course_id == Course.id)
+            .filter(Enrollment.intern_id == intern_id)
+            .all()
+        )
+
+    def get_interns_courses(self,intern_id):
+        return (
+            self.db.query(Enrollment,Course).filter(Enrollment.intern_id==intern_id,Enrollment.course_id==Course.id).all()
+        )
+
+    def get_intern_course_info(self,course_id,intern_id):
+        return (
+            self.db.query(Enrollment,Course).
+            filter(Enrollment.intern_id==intern_id,Enrollment.course_id==course_id,
+            Enrollment.course_id==Course.id).first()
+        )

@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from app.models import enrollment
+from app.models import user
+from app.models import course
 from app.core.database import Base,engine
 from app.exceptions.ResourceNotFoundException import ResourceNotFoundException
 from app.exceptions.ResrouceAlreadyExistsException import ResourceAlreadyExistsException

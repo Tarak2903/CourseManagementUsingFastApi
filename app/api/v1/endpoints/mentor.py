@@ -11,7 +11,7 @@ router=APIRouter()
 
 
 @router.post('/interns',tags=['Mentor'])
-def add_intern(intern:InternCreationRequest,
+async def add_intern(intern:InternCreationRequest,
                intern_service:InternService=Depends(get_intern_service),
                mentor:User=Depends(get_current_mentor)):
     intern_service.add_intern(intern,mentor.id)

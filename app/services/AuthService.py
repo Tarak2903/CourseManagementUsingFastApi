@@ -31,3 +31,8 @@ class AuthService:
         return self.create_token(
             {"user_name": user.username,
              "exp": datetime.now(timezone.utc) + timedelta(minutes=15)})
+
+    # def sign_user(self,user:SignupRequest):
+    #     hashed_password=self.password_hash.hash(user.password)
+    #     user.password=hashed_password
+    #     self.auth_repo.add_user(user)

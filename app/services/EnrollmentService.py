@@ -1,7 +1,11 @@
 from app.exceptions.ForbiddenException import ForbiddenException
 from app.exceptions.course_exceptions import CourseNotFoundException
+from app.models.course import Course
+from app.models.enrollment import Enrollment
 from app.repositories.CourseRepository import CourseRepository
 from app.repositories.InternRepository import InternRepository
+from app.schemas.Course.InternCourseResponse import InternCourseResponse
+from app.schemas.Course.InternCourseProgressResponse import InternProgressResponse
 from app.schemas.Enrollment.EnrollmentRequest import EnrollmentRequest
 
 
@@ -26,4 +30,27 @@ class EnrollmentService:
 
 
         return self.enrollment_repo.enroll_intern(ls_interns,course.id)
+
+    def get_intern_progress(self,intern_id):
+        intern_progress=self.enrollment_repo.get_intern_progress(intern_id)
+        intern_progress_response=[]
+        for enrollment,course in intern_progress:
+            intern_progress_model=InternProgressResponse(course_name=course.name,total_sections=course.total_section,
+            sections_completed=enrollment.section_completed,percentage_completed=enrollment.section_completed/course.total_section)
+            intern_progress_response.append(intern_progress_model)
+
+        return intern_progress_response
+
+    def get_interns_courses(self,intern_id):
+        courses_model=self.enrollment_repo.get_interns_courses(intern_id)
+        courses=[]
+        [courses.append(InternCourseResponse(course_name=course.name,total_sections=course.total_section))
+         for enrollment,course in courses_model]
+        return courses
+
+    def get_intern_course_info(self,course_id,intern_id):
+        enrollment,course= self.enrollment_repo.get_intern_course_info(course_id,intern_id)
+        return InternProgressResponse(course_name=course.name,total_sections=course.total_section,
+                                      sections_completed=enrollment.section_completed,
+                                      percentage_completed=enrollment.section_completed/course.total_section)
 

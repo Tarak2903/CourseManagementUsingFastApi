@@ -28,3 +28,6 @@ class InternRepository:
     def find_interns_by_mentor_id(self,mentor_id):
         results = self.db.query(User.id).filter(User.mentor_id == mentor_id).all()
         return [row.id for row in results]
+
+    def get_interns_by_mentor_id(self,mentor_id):
+        return self.db.query(User).filter(User.mentor_id==mentor_id).all()

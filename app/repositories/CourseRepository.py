@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.models.course import Course
+from app.models.enrollment import Enrollment
+from app.models.user import User
 
 
 class CourseRepository:
@@ -16,3 +18,7 @@ class CourseRepository:
 
     def find_course_by_course_code(self,course_code):
         return self.db.query(Course).filter(Course.course_code==course_code).first()
+
+    def get_mentor_courses(self):
+        ls= self.db.query(Course).all()
+        return ls
