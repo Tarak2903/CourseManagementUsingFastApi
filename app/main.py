@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 
 from app.exceptions.InvalidOperationException import InvalidOperationException
 from app.models import enrollment
@@ -10,7 +11,7 @@ from app.exceptions.ResrouceAlreadyExistsException import ResourceAlreadyExistsE
 from app.exceptions.UnauthenticatedException import  UnauthenticatedException
 from app.exceptions.ForbiddenException import ForbiddenException
 from app.exceptions.handler import resource_already_exists_exception, resource_doesnt_exists_exception, \
-    unauthenticated_exception, forbidden_exception, invalid_operation_exception
+    unauthenticated_exception, forbidden_exception, invalid_operation_exception, http_exception, validation_exception
 
 Base.metadata.create_all(bind=engine)
 from app.api.v1.endpoints.intern import router as user_router
@@ -44,4 +45,12 @@ app.add_exception_handler(
 app.add_exception_handler(
     InvalidOperationException,
     invalid_operation_exception
+)
+app.add_exception_handler(
+    HTTPException,
+    http_exception
+)
+app.add_exception_handler(
+    RequestValidationError,
+    validation_exception
 )
